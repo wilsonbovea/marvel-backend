@@ -54,7 +54,7 @@ router.post("/favorite/comics", isAuthenticated, async (req, res) => {
 router.get("/favorite/list", isAuthenticated, async (req, res) => {
   try {
     const comic = await Comic.find({ token: req.query.token });
-    const character = await Character.find();
+    const character = await Character.find({ token: req.query.token });
     res.status(200).json({
       comic: comic,
       character: character,
