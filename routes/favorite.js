@@ -13,6 +13,7 @@ router.post("/favorite/characters", isAuthenticated, async (req, res) => {
         name: req.body.name,
         picture: req.body.picture,
         idCharacter: req.body.id,
+        token: req.body.token,
       });
       await newCharacter.save();
       res.status(201).json({
@@ -36,6 +37,7 @@ router.post("/favorite/comics", isAuthenticated, async (req, res) => {
         title: req.body.title,
         picture: req.body.picture,
         idComic: req.body.id,
+        token: req.body.token,
       });
       await newComic.save();
       res.status(201).json({
@@ -51,7 +53,7 @@ router.post("/favorite/comics", isAuthenticated, async (req, res) => {
 });
 router.get("/favorite/list", isAuthenticated, async (req, res) => {
   try {
-    const comic = await Comic.find();
+    const comic = await Comic.find({ token: req.query.token });
     const character = await Character.find();
     res.status(200).json({
       comic: comic,
