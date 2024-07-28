@@ -3,10 +3,10 @@ const router = express.Router();
 const isAuthenticated = require("../middlewares/isAuthenticated");
 const Character = require("../models/favorite/character");
 const Comic = require("../models/favorite/comic");
-router.post("/favorite/characters", async (req, res) => {
+router.post("/favorite/characters", isAuthenticated, async (req, res) => {
   try {
-    const character = await Character.findOne({ idCharacter: req.body.id });
-    if (character && req.body.name) {
+    const character = await Character.findOne({ token: req.body.token });
+    if (character.idCharacter) {
       res.status(401).json("The character alredy exists in favorites");
     } else {
       const newCharacter = new Character({
@@ -27,10 +27,10 @@ router.post("/favorite/characters", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
-router.post("/favorite/comics", async (req, res) => {
+router.post("/favorite/comics", isAuthenticated, async (req, res) => {
   try {
-    const comic = await Comic.findOne({ idComic: req.body.id });
-    if (comic) {
+    const comic = await Comic.findOne({ token: req.body.token });
+    if (comic.idComic) {
       res.status(401).json("The comic alredy exists in favorites");
     } else {
       const newComic = new Comic({
