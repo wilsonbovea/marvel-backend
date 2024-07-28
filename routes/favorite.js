@@ -5,7 +5,7 @@ const Character = require("../models/favorite/character");
 const Comic = require("../models/favorite/comic");
 router.post("/favorite/characters", isAuthenticated, async (req, res) => {
   try {
-    const character = await Character.findOne({ token: req.body.token });
+    const character = await Character.find({ token: req.body.token });
     if (character.idCharacter) {
       res.status(401).json("The character alredy exists in favorites");
     } else {
@@ -29,7 +29,8 @@ router.post("/favorite/characters", isAuthenticated, async (req, res) => {
 });
 router.post("/favorite/comics", isAuthenticated, async (req, res) => {
   try {
-    const comic = await Comic.findOne({ token: req.body.token });
+    const comic = await Comic.find({ token: req.body.token });
+    console.log(comic);
     if (comic.idComic) {
       res.status(401).json("The comic alredy exists in favorites");
     } else {
