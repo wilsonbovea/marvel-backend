@@ -64,17 +64,29 @@ router.get("/favorite/list", isAuthenticated, async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
-router.delete("/favorite/delete/:id", isAuthenticated, async (req, res) => {
+router.post("/favorite/delete/comic", isAuthenticated, async (req, res) => {
   try {
-    if (await Comic.findById(req.params.id)) {
-      await Comic.deleteOne({ _id: req.params.id });
-      res.status(200).json("The comic has been deleted");
+    const comic = await Comic.find({ idComic: req.body.id });
+    if (comic[0].token === req.body.token) {
+      const comicDeleted = await Comic.deleteOne({ idComic: req.body.id });
+      res.status(200).json(comicDeleted);
     } else {
+      res.status(500).json({ message: error });
     }
-    if (await Character.findById(req.params.id)) {
-      await Character.deleteOne({ _id: req.params.id });
-      res.status(200).json("The character has been deleted");
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+router.post("/favorite/delete/character", isAuthenticated, async (req, res) => {
+  try {
+    const character = await Character.find({ idCharacter: req.body.id });
+    if (character[0].token === req.body.token) {
+      const characterDeleted = await Character.deleteOne({
+        idCharacter: req.body.id,
+      });
+      res.status(200).json(characterDeleted);
     } else {
+      res.status(500).json({ message: error });
     }
   } catch (error) {
     res.status(500).json({ message: error.message });
