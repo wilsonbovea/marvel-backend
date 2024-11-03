@@ -56,6 +56,7 @@ router.get("/favorite/list", isAuthenticated, async (req, res) => {
   try {
     const comic = await Comic.find({ token: req.query.token });
     const character = await Character.find({ token: req.query.token });
+
     res.status(200).json({
       comic: comic,
       character: character,
@@ -66,9 +67,12 @@ router.get("/favorite/list", isAuthenticated, async (req, res) => {
 });
 router.post("/favorite/delete/comic", isAuthenticated, async (req, res) => {
   try {
-    const comic = await Comic.find({ idComic: req.body.id });
+    const comic = await Comic.find({ token: req.body.token });
     if (comic[0].token === req.body.token) {
-      const comicDeleted = await Comic.deleteOne({ idComic: req.body.id });
+      const comicDeleted = await Comic.deleteOne({
+        idComic: req.body.id,
+        token: req.body.token,
+      });
       res.status(200).json(comicDeleted);
     } else {
       res.status(500).json({ message: error });
@@ -79,10 +83,11 @@ router.post("/favorite/delete/comic", isAuthenticated, async (req, res) => {
 });
 router.post("/favorite/delete/character", isAuthenticated, async (req, res) => {
   try {
-    const character = await Character.find({ idCharacter: req.body.id });
+    const character = await Character.find({ token: req.body.token });
     if (character[0].token === req.body.token) {
       const characterDeleted = await Character.deleteOne({
         idCharacter: req.body.id,
+        token: req.body.token,
       });
       res.status(200).json(characterDeleted);
     } else {
